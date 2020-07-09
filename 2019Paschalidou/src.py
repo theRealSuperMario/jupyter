@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 """Code for Superellipses
@@ -133,3 +134,130 @@ def adaptive_sampling_full_circle(
     theta_Q3Q4 = np.concatenate([theta_Q3, theta_Q4], axis=0)
     final_theta = np.concatenate([theta_Q3Q4, theta_Q1Q2], axis=0)
     return final_theta
+
+
+"""Code for Superquadric
+"""
+
+
+def surface_function(
+    omega, theta, epsilon1=1, epsilon2=1, alpha_vec=np.array([1.0, 1.0, 1.0])
+):
+    """
+    Omega in range [-\pi, \pi], eta in range [-\pi / 2, \pi / 2]
+    """
+    a1, a2, a3 = alpha_vec
+    v = np.array(
+        [
+            a1 * ownpow(np.cos(omega), epsilon1) * ownpow(np.cos(theta), epsilon2),
+            a2 * ownpow(np.sin(omega), epsilon1) * ownpow(np.cos(theta), epsilon2),
+            a3 * ownpow(np.sin(theta), epsilon2),
+        ]
+    )
+    return v
+
+
+def adaptive_sampling_3D_v1(
+    a1,
+    a2,
+    a3,
+    epsilon1,
+    epsilon2,
+    K=0.025,
+    theta_threshold=0.02,
+    omega_threshold=0.02,
+    N=100,
+    theta_max=np.pi / 2,
+    omega_max=np.pi / 2,
+):
+    """Sampling model from Section 4.3. ONLY FOR FIRST QUADRANT
+    * Use `model_theta_towards_zero` when theta below certain threshold
+    * Use `model_theta_towards_90`when pi/2 - theta below certain threshold.
+    * Use `model_A` otherwise
+
+    Working set of parameters:
+        a1 = a2 = 20
+        epsilon = 0.2
+        K = 1
+        theta_threshold = 0.02
+    """
+    omegas, delta_omegas = adaptive_sampling_v1(
+        a1, a2, epsilon1, omega_threshold, N, omega_max
+    )
+    thetas, delta_thetas = adaptive_sampling_v1(
+        a2, a3, epsilon2, K, theta_threshold, N, theta_max
+    )
+    omegas, thetas = np.meshgrid(omegas, thetas)
+    omegas = omegas.ravel()
+    thetas = thetas.ravel()
+    return omegas, thetas
+
+
+def adaptive_sampling_3D_v2(
+    a1,
+    a2,
+    a3,
+    epsilon1,
+    epsilon2,
+    K=0.025,
+    theta_threshold=0.02,
+    omega_threshold=0.02,
+    N=100,
+    theta_max=np.pi / 2,
+    omega_max=np.pi / 2,
+):
+    """Sampling model from Section 4.3. ONLY FOR FIRST QUADRANT
+    * Use `model_theta_towards_zero` when theta or (pi / 2 - theta) below certain threshold
+    * Use `model_A` otherwise
+    * swap axis at pi / 4
+
+    Working set of parameters:
+        a1 = a2 = 20
+        epsilon = 0.2
+        K = 1
+        theta_threshold = 0.02
+    """
+    """Sampling model from Section 4.3. ONLY FOR FIRST QUADRANT
+    * Use `model_theta_towards_zero` when theta below certain threshold
+    * Use `model_theta_towards_90`when pi/2 - theta below certain threshold.
+    * Use `model_A` otherwise
+
+    Working set of parameters:
+        a1 = a2 = 20
+        epsilon = 0.2
+        K = 1
+        theta_threshold = 0.02
+    """
+    omegas, delta_omegas = adaptive_sampling_v2(a1, a2, epsilon1, K, omega_threshold, N)
+    thetas, delta_thetas = adaptive_sampling_v2(a2, a3, epsilon2, K, theta_threshold, N)
+    omegas, thetas = np.meshgrid(omegas, thetas)
+    omegas = omegas.ravel()
+    thetas = thetas.ravel()
+    return omegas, thetas
+
+
+def adaptive_sampling_3D_full_circle(
+    a1,
+    a2,
+    a3,
+    epsilon1,
+    epsilon2,
+    K=0.025,
+    theta_threshold=0.02,
+    omega_threshold=0.02,
+    N=100,
+):
+    omega = adaptive_sampling_full_circle(a1, a2, epsilon1, K, omega_threshold, N)
+    theta_Q1, deltas_Q1 = adaptive_sampling_v2(a2, a3, epsilon2, K, theta_threshold, N)
+    theta = np.concatenate([-theta_Q1[::-1], theta_Q1])
+
+    omega_grid, theta_grid = np.meshgrid(omega, theta)
+    omega_grid = omega_grid.ravel()
+    theta_grid = theta_grid.ravel()
+
+    return omega_grid, theta_grid
+
+
+def make_colors(n_colors):
+    colors = plt.cm.seismic(np.linspace(0, 1, n_colors))[:, :3]
+    return colors
