@@ -1,0 +1,3 @@
+[submodule "FourierRingAnalysis/image_quality_assessment"]
+	path = FourierRingAnalysis/image_quality_assessment
+	url = git@github.com:theRealSuperMario/image_quality_assessment.git
