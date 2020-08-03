@@ -1,3 +1,6 @@
 [submodule "FourierRingAnalysis/image_quality_assessment"]
 	path = FourierRingAnalysis/image_quality_assessment
 	url = git@github.com:theRealSuperMario/image_quality_assessment.git
+[submodule "2018_Pham/SceneCut"]
+	path = 2018_Pham/SceneCut
+	url = git@github.com:theRealSuperMario/SceneCut.git
