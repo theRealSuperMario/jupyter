@@ -1,0 +1,7 @@
+name: Pull Request Docs Check
+
+# https://github.com/ammaraskar/sphinx-action-test
+
+on: [pull_request]
+
+jobs:
