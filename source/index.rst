@@ -10,9 +10,6 @@ Welcome to notes's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   aussteifung.rst
-
-
 
 Indices and tables
 ==================
