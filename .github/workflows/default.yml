@@ -38,14 +38,15 @@ jobs:
     - name: Commit documentation changes
       run: |
         echo git
-        git lfs clone https://github.com/ammaraskar/sphinx-action-test.git --branch gh-pages --single-branch gh-pages
-        # git lfs clone is necessary below git 2.3.0 https://stackoverflow.com/a/53409030/10045897
+        git clone https://github.com/ammaraskar/sphinx-action-test.git --branch gh-pages --single-branch gh-pages
         cp -r build//html/* gh-pages/
         cd gh-pages
         touch .nojekyll
+        # Try to fix git lfs problem https://stackoverflow.com/a/54119191/10045897
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add .
+        git lfs untrack "*.pdf"
+        git add --renormalize .
         git commit -m "Update documentation" -a || true
         # The above command will fail if no changes were present, so we ignore
         # that.
