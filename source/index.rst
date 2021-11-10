@@ -9,6 +9,19 @@ Welcome to notes's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   
+   notes/notes.rst
+
+
+
+How to build the docs
+=====================
+
+.. code-block:: bash
+
+   make html
+
+
 
 
 Indices and tables
