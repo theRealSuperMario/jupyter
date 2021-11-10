@@ -52,7 +52,8 @@ jobs:
         # The above command will fail if no changes were present, so we ignore
         # that.
     - name: Push changes
+      # https://github.com/peaceiris/actions-gh-pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./public
+        publish_dir: ./gh-pages
