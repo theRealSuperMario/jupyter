@@ -47,6 +47,7 @@ jobs:
         git config --local user.name "GitHub Action"
         git lfs untrack "*.pdf"
         git add --renormalize .
+        git add .
         git commit -m "Update documentation" -a || true
         # The above command will fail if no changes were present, so we ignore
         # that.
